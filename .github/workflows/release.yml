@@ -1,9 +1,10 @@
 name: release
 
-# Tag a commit to ship: `git tag v1.0.0 && git push origin v1.0.0`.
+# Tag a commit to ship. Both "v1.0.0" and "1.0.0" are accepted, because a tag
+# that silently matches nothing looks exactly like a broken workflow.
 on:
   push:
-    tags: ["v*"]
+    tags: ["v*", "[0-9]*"]
   workflow_dispatch:
 
 permissions:
