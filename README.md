@@ -42,9 +42,6 @@ that address into a web browser to see the picture.
 | **PC** | Windows, Linux |
 | **Software** | Streamlabs, OBS, anything with a browser source |
 
-The app is in **English and French**, with a button to switch, and has a **light
-and dark theme**.
-
 ## How it works
 
 ```
@@ -64,8 +61,7 @@ no telemetry, no cloud relay, nothing phoning home. The only thing running is a
 small web server on your own PC.
 
 The video goes straight from your phone to Streamlabs across your wifi. It never
-passes through the app, is never recorded, and never reaches the internet. Unplug
-your router from the wall and it still works.
+passes through the app, is never recorded, and never reaches the internet.
 
 ## The certificate warning
 
@@ -115,4 +111,4 @@ Made by [SER-PICO](https://github.com/SER-PICO).
 
 ## License
 
-MIT, Copyright (c) 2026 SER-PICO. Do what you like with it.
+MIT

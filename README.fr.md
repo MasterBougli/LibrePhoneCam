@@ -44,9 +44,6 @@ aussi simplement coller cette adresse dans un navigateur web pour voir l'image.
 | **PC** | Windows, Linux |
 | **Logiciels** | Streamlabs, OBS, tout ce qui a une source navigateur |
 
-L'application est en **français et en anglais**, avec un bouton pour changer, et
-dispose d'un **thème clair et sombre**.
-
 ## Comment ça marche
 
 ```
@@ -68,7 +65,7 @@ PC.
 
 La vidéo va directement du téléphone à Streamlabs via votre wifi. Elle ne passe
 jamais par l'application, n'est jamais enregistrée, et n'atteint jamais
-internet. Débranchez votre box : ça marche encore.
+internet.
 
 ## L'avertissement de certificat
 
@@ -118,4 +115,4 @@ Créé par [SER-PICO](https://github.com/SER-PICO).
 
 ## Licence
 
-MIT, Copyright (c) 2026 SER-PICO. Faites-en ce que vous voulez.
+MIT
