@@ -33,11 +33,6 @@ jobs:
           python tests/test_signaling.py
           python tests/test_runtime.py
 
-      # Regenerated rather than trusted from the repo, so the icon in the
-      # release always matches the generator in the source.
-      - name: Generate icon
-        run: python build-tools/make_icon.py
-
       - name: Build executable
         run: pyinstaller build-tools/LibrePhoneCam.spec --noconfirm
 

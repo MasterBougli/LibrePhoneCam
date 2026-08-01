@@ -25,9 +25,13 @@ The app opens with everything you need:
 
 1. **Scan the QR code** with your phone, accept the certificate warning
    ([why?](#the-certificate-warning)), then tap **Start camera**.
-2. **Copy the second address** into Streamlabs: `+` > **Browser**, size 1920x1080.
+2. **Copy the second address** and add it as a **Browser source**:
+   in Streamlabs or OBS, `+` > **Browser**, paste the address, size 1920x1080.
 
 Done. Your phone camera is now a source in your scene.
+
+Any software with a browser source works the same way. You can also just paste
+that address into a web browser to see the picture.
 
 ## Works with
 
@@ -98,9 +102,9 @@ Any argument turns `run.bat` into a command line version: `run.bat --help`.
 
 ```
 librephonecam/   the app and the local server
-web/             the phone page and the Streamlabs page
+web/             the phone page and the browser source page
 tests/           run them directly, no framework needed
-build-tools/     icon, PyInstaller spec
+build-tools/     icon and PyInstaller spec
 ```
 
 Contributions welcome.

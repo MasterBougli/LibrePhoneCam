@@ -26,10 +26,14 @@ L'application s'ouvre avec tout ce qu'il faut :
 1. **Scannez le QR code** avec votre téléphone, acceptez l'avertissement de
    certificat ([pourquoi ?](#lavertissement-de-certificat)), puis touchez
    **Démarrer la caméra**.
-2. **Copiez la deuxième adresse** dans Streamlabs : `+` > **Navigateur**,
+2. **Copiez la deuxième adresse** et ajoutez-la en **source Navigateur** :
+   dans Streamlabs ou OBS, `+` > **Navigateur**, collez l'adresse,
    taille 1920x1080.
 
 Voilà. La caméra du téléphone est maintenant une source dans votre scène.
+
+N'importe quel logiciel avec une source navigateur marche pareil. Vous pouvez
+aussi simplement coller cette adresse dans un navigateur web pour voir l'image.
 
 ## Compatible avec
 
@@ -101,9 +105,9 @@ Avec un argument, `run.bat` passe en version ligne de commande : `run.bat --help
 
 ```
 librephonecam/   l'application et le serveur local
-web/             la page du téléphone et celle de Streamlabs
+web/             la page du téléphone et celle de la source navigateur
 tests/           lancez-les directement, sans framework
-build-tools/     icône, configuration PyInstaller
+build-tools/     icône et configuration PyInstaller
 ```
 
 Les contributions sont bienvenues.

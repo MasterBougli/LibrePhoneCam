@@ -18,9 +18,6 @@ if not exist "%PY%" (
 echo   Installing build dependencies...
 "%PY%" -m pip install -r build-tools\requirements.txt --quiet || goto :fail
 
-echo   Generating the icon...
-"%PY%" build-tools\make_icon.py || goto :fail
-
 echo   Building...
 "%PY%" -m PyInstaller build-tools\LibrePhoneCam.spec --noconfirm || goto :fail
 

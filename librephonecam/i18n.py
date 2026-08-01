@@ -15,10 +15,11 @@ STRINGS: dict[str, dict[str, str]] = {
             "The certificate was just regenerated, so your phone will ask\n"
             "you to accept it again."
         ),
-        "streamStep": "2 . PASTE INTO STREAMLABS",
+        "streamStep": "2 . ADD IT AS A BROWSER SOURCE",
         "streamHint": (
-            "Add a Browser source, size 1920 x 1080. This address also works\n"
-            "in any browser on this PC if you just want to check the picture."
+            "In Streamlabs, OBS or anything similar, add a Browser source and\n"
+            "paste this address, size 1920 x 1080. It also opens directly in a\n"
+            "web browser if you just want to check the picture."
         ),
         "copy": "Copy",
         "copied": "Copied",
@@ -58,10 +59,11 @@ STRINGS: dict[str, dict[str, str]] = {
             "Le certificat vient d'être régénéré : votre téléphone va vous\n"
             "demander de l'accepter à nouveau."
         ),
-        "streamStep": "2 . COLLEZ DANS STREAMLABS",
+        "streamStep": "2 . AJOUTEZ-LA EN SOURCE NAVIGATEUR",
         "streamHint": (
-            "Ajoutez une source Navigateur, taille 1920 x 1080. Cette adresse\n"
-            "marche aussi dans un navigateur du PC pour vérifier l'image."
+            "Dans Streamlabs, OBS ou équivalent, ajoutez une source Navigateur\n"
+            "et collez cette adresse, taille 1920 x 1080. Elle s'ouvre aussi\n"
+            "directement dans un navigateur web pour vérifier l'image."
         ),
         "copy": "Copier",
         "copied": "Copié",
