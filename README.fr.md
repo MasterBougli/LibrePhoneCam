@@ -95,7 +95,7 @@ caméra en arrière-plan. Gardez l'onglet au premier plan, et le téléphone bra
 ## Depuis les sources
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/LibrePhoneCam
+git clone https://github.com/SER-PICO/LibrePhoneCam
 cd LibrePhoneCam
 run.bat          # Windows, ou ./run.sh ailleurs. Installe tout et ouvre l'app.
 build.bat        # construit LibrePhoneCam.exe dans dist/
@@ -112,6 +112,10 @@ build-tools/     icône et configuration PyInstaller
 
 Les contributions sont bienvenues.
 
+## Crédits
+
+Créé par [SER-PICO](https://github.com/SER-PICO).
+
 ## Licence
 
-MIT
+MIT, Copyright (c) 2026 SER-PICO. Faites-en ce que vous voulez.

@@ -92,7 +92,7 @@ background. Keep the tab in front, and keep the phone plugged in.
 ## From source
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/LibrePhoneCam
+git clone https://github.com/SER-PICO/LibrePhoneCam
 cd LibrePhoneCam
 run.bat          # Windows, or ./run.sh elsewhere. Sets everything up and opens the app.
 build.bat        # builds LibrePhoneCam.exe into dist/
@@ -109,6 +109,10 @@ build-tools/     icon and PyInstaller spec
 
 Contributions welcome.
 
+## Credits
+
+Made by [SER-PICO](https://github.com/SER-PICO).
+
 ## License
 
-MIT
+MIT, Copyright (c) 2026 SER-PICO. Do what you like with it.

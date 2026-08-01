@@ -38,6 +38,8 @@ export const STRINGS = {
 
     themeToggle: 'Switch between light and dark',
     langToggle: 'Passer en français',
+    credit: 'Made by SER-PICO',
+    creditTitle: 'Open the project on GitHub',
   },
 
   fr: {
@@ -74,6 +76,8 @@ export const STRINGS = {
 
     themeToggle: 'Basculer clair / sombre',
     langToggle: 'Switch to English',
+    credit: 'Créé par SER-PICO',
+    creditTitle: 'Ouvrir le projet sur GitHub',
   },
 };
 

@@ -132,6 +132,14 @@ def main() -> int:
         check("languages actually differ",
               i18n.t("en", "phoneStep") != i18n.t("fr", "phoneStep"))
 
+        # Attribution must survive a language switch and point somewhere real.
+        from librephonecam import __author__, __repo_url__
+
+        check("credit names the author", __author__ in app.credit.cget("text"),
+              app.credit.cget("text"))
+        check("repo url matches the author",
+              __repo_url__.startswith(f"https://github.com/{__author__}/"), __repo_url__)
+
         # Every key must exist in both languages, or a switch shows raw keys.
         missing = set(i18n.STRINGS["en"]) ^ set(i18n.STRINGS["fr"])
         check("translation keys match across languages", not missing, str(sorted(missing)))

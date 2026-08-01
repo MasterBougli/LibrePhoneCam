@@ -48,6 +48,8 @@ STRINGS: dict[str, dict[str, str]] = {
         "errStartTitle": "Could not start",
         "themeTip": "Switch between light and dark",
         "langTip": "Passer en français",
+        "credit": "Made by {author}",
+        "creditTip": "Open the project on GitHub",
     },
     "fr": {
         "phoneStep": "1 . SCANNEZ AVEC VOTRE TÉLÉPHONE",
@@ -92,6 +94,8 @@ STRINGS: dict[str, dict[str, str]] = {
         "errStartTitle": "Démarrage impossible",
         "themeTip": "Basculer clair / sombre",
         "langTip": "Switch to English",
+        "credit": "Créé par {author}",
+        "creditTip": "Ouvrir le projet sur GitHub",
     },
 }
 

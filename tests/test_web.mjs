@@ -56,6 +56,14 @@ check('viewer count pluralises', t('en', 'viewers', 1) !== t('en', 'viewers', 2)
 check('french differs from english', t('fr', 'startCamera') !== t('en', 'startCamera'),
   t('fr', 'startCamera'));
 
+// Attribution: present in both languages, and linking to the real profile.
+const AUTHOR = 'SER-PICO';
+check('credit names the author in both languages',
+  langs.every((l) => t(l, 'credit').includes(AUTHOR)),
+  langs.map((l) => t(l, 'credit')).join(' / '));
+check('credit links to the author on github',
+  read('index.html').includes(`https://github.com/${AUTHOR}/`));
+
 // House style: no em or en dashes anywhere in the web sources.
 const files = ['index.html', 'view.html', 'static/i18n.js', 'static/theme.js',
   'static/sender.js', 'static/viewer.js', 'static/camera.js',

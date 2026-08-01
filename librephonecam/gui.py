@@ -15,7 +15,7 @@ import tkinter as tk
 import webbrowser
 from tkinter import messagebox
 
-from . import __app_name__, __version__, i18n, prefs, theme
+from . import __app_name__, __author__, __repo_url__, __version__, i18n, prefs, theme
 from .paths import icon_path
 from .qr import matrix as qr_matrix
 from .runtime import Config, Endpoints, NoNetwork, PortInUse, ServerThread
@@ -223,6 +223,7 @@ class App:
         self.stream_hint.configure(text=i18n.t(self.lang, "streamHint"))
         self.open_btn.configure(text=i18n.t(self.lang, "openPreview"))
         self.more_btn.configure(text=i18n.t(self.lang, "otherAddresses"))
+        self.credit.configure(text=i18n.t(self.lang, "credit", author=__author__))
 
         regenerated = bool(self.endpoints and self.endpoints.cert_regenerated)
         self.phone_hint.configure(
@@ -331,6 +332,14 @@ class App:
             activebackground="accentStrong", activeforeground="onAccent",
         )
         self.open_btn.pack(side="right", ipady=5)
+
+        credit = self.styled(tk.Frame(outer), bg="bg")
+        credit.pack(fill="x", pady=(14, 0))
+        self.credit = self.styled(
+            tk.Label(credit, font=(FONT, 8), cursor="hand2"), bg="bg", fg="muted"
+        )
+        self.credit.pack(side="left")
+        self.credit.bind("<Button-1>", lambda _: webbrowser.open(__repo_url__))
 
     def _section(self, parent: tk.Misc):
         frame = self.styled(tk.Frame(parent, padx=16, pady=14), bg="surface")
