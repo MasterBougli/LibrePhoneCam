@@ -1,0 +1,78 @@
+name: release
+
+# Tag a commit to ship: `git tag v1.0.0 && git push origin v1.0.0`.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # Not the newest: the release build should sit on a version
+          # PyInstaller has had time to shake out.
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller==6.21.0
+
+      - name: Run tests
+        run: |
+          python tests/test_signaling.py
+          python tests/test_runtime.py
+
+      # Regenerated rather than trusted from the repo, so the icon in the
+      # release always matches the generator in the source.
+      - name: Generate icon
+        run: python build-tools/make_icon.py
+
+      - name: Build executable
+        run: pyinstaller build-tools/LibrePhoneCam.spec --noconfirm
+
+      - name: Smoke-test the executable
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist\LibrePhoneCam.exe -PassThru
+          Start-Sleep -Seconds 20
+          if ($p.HasExited) { throw "LibrePhoneCam.exe exited on its own (code $($p.ExitCode))" }
+          try {
+            $r = Invoke-WebRequest http://localhost:8080/health -UseBasicParsing -TimeoutSec 10
+            Write-Host "health: $($r.Content)"
+          } finally {
+            Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LibrePhoneCam-windows
+          path: dist/LibrePhoneCam.exe
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/LibrePhoneCam.exe
+          draft: false
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            Download **LibrePhoneCam.exe** below and double-click it. Nothing
+            else to install.
+
+            Windows SmartScreen will warn that the publisher is unknown,
+            because the executable is not code-signed (a certificate costs a
+            few hundred euros a year). Click **More info** then **Run anyway**,
+            or build it yourself from source.

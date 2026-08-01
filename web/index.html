@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0d10">
+<title>LibrePhoneCam</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="sender">
+
+<div class="frame">
+  <video id="preview" autoplay playsinline muted></video>
+
+  <div id="rotate" class="rotate-hint" data-i18n="rotate" hidden></div>
+
+  <header id="live" class="bar top" hidden>
+    <span class="pill"><span id="dot" class="dot idle"></span><span id="state"></span></span>
+    <span class="pill" id="viewers"></span>
+  </header>
+
+  <footer id="livebar" class="bar bottom" hidden>
+    <div class="stats" id="stats"></div>
+  </footer>
+</div>
+
+<main class="panel">
+  <div class="toolbar">
+    <button id="theme" class="chip" data-i18n-title="themeToggle" type="button">☀</button>
+    <button id="lang" class="chip" data-i18n-title="langToggle" type="button">FR</button>
+  </div>
+
+  <p id="error" class="error" hidden></p>
+
+  <section id="setup">
+    <h1>LibrePhoneCam</h1>
+    <p class="lead" data-i18n="tagline"></p>
+
+    <div class="grid">
+      <label>
+        <span data-i18n="quality"></span>
+        <select id="resolution">
+          <option value="auto" data-i18n="auto" selected></option>
+          <option value="720">720p</option>
+          <option value="1080">1080p</option>
+          <option value="1440">1440p</option>
+        </select>
+      </label>
+      <label>
+        <span data-i18n="frameRate"></span>
+        <select id="fps">
+          <option value="auto" data-i18n="auto" selected></option>
+          <option value="24">24 fps</option>
+          <option value="30">30 fps</option>
+          <option value="60">60 fps</option>
+        </select>
+      </label>
+      <label>
+        <span data-i18n="bitrate"></span>
+        <select id="bitrate">
+          <option value="auto" data-i18n="auto" selected></option>
+          <option value="4000">4 Mbps</option>
+          <option value="8000">8 Mbps</option>
+          <option value="12000">12 Mbps</option>
+          <option value="20000">20 Mbps</option>
+        </select>
+      </label>
+    </div>
+
+    <button id="start" class="primary" data-i18n="startCamera"></button>
+    <p class="hint" data-i18n="hint"></p>
+  </section>
+
+  <p id="detected" class="detected"></p>
+
+  <section id="controls" class="controls" hidden>
+    <button id="flip" class="ghost" data-i18n="flip"></button>
+    <button id="torch" class="ghost" data-i18n="torch" hidden></button>
+    <button id="stop" class="danger" data-i18n="stop"></button>
+  </section>
+</main>
+
+<script type="module" src="/static/sender.js"></script>
+</body>
+</html>

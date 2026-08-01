@@ -1,0 +1,347 @@
+/* Dark is the default; theme.js stamps data-theme on <html> either way. */
+:root,
+:root[data-theme="dark"] {
+  --bg: #0b0d10;
+  --surface: #14171c;
+  --surface-2: #1c2027;
+  --line: #272c34;
+  --text: #e8ebf0;
+  --muted: #8b939f;
+  --accent: #3b82f6;
+  --accent-strong: #2563eb;
+  --danger: #ef4444;
+  --good: #22c55e;
+  --warn: #f59e0b;
+  --on-accent: #ffffff;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --line: #d8dee7;
+  --text: #10151c;
+  --muted: #5c6672;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --danger: #dc2626;
+  --good: #16a34a;
+  --warn: #b45309;
+  --on-accent: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- viewer */
+/* Kept transparent so the Streamlabs source can be layered over a scene. */
+
+body.viewer {
+  background: transparent;
+  overflow: hidden;
+}
+
+body.viewer #stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: transparent;
+}
+
+body.viewer .overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 18px;
+}
+
+body.viewer .overlay[hidden] { display: none; }
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------- sender */
+
+body.sender {
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.frame {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 38vh;
+  background: #000;
+  overflow: hidden;
+}
+
+#preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#preview.mirrored { transform: scaleX(-1); }
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  pointer-events: none;
+}
+
+.bar.top { top: 0; }
+.bar.bottom { bottom: 0; justify-content: center; }
+.bar[hidden] { display: none; }
+
+/* Pills sit on top of the video, so they stay dark in both themes: a light
+   pill would vanish against a bright shot. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(11, 13, 16, 0.72);
+  backdrop-filter: blur(12px);
+  color: #f2f5f9;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex: none;
+}
+
+.dot.live { background: var(--good); box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18); }
+.dot.waiting { background: var(--warn); }
+.dot.idle { background: #8b939f; }
+
+.stats {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: #c8ceD8;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(11, 13, 16, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.stats:empty { display: none; }
+
+.rotate-hint {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.94);
+  color: #1a1204;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  max-width: 80%;
+}
+
+.rotate-hint[hidden] { display: none; }
+
+.panel {
+  flex: 0 0 auto;
+  padding: 16px 18px calc(20px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+/* Before the camera starts there is nothing to preview, so drop the black box
+   and let the setup panel own the screen. */
+body.sender:not(.running) { justify-content: center; }
+body.sender:not(.running) .frame { display: none; }
+body.sender:not(.running) .panel {
+  border-top: none;
+  background: transparent;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chip {
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chip:active { opacity: 0.7; }
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+/* Bitrate sits alone on the second row; let it use the full width rather than
+   leaving a ragged gap. */
+.grid label:last-child { grid-column: 1 / -1; }
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+select {
+  appearance: none;
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 16px; /* below 16px iOS zooms the page on focus */
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+button {
+  appearance: none;
+  border: none;
+  border-radius: 13px;
+  padding: 15px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active { opacity: 0.72; }
+button[disabled] { opacity: 0.45; }
+button[hidden] { display: none; }
+
+.primary { width: 100%; background: var(--accent); color: var(--on-accent); }
+.danger { background: var(--danger); color: #ffffff; }
+.ghost { background: var(--surface-2); border: 1px solid var(--line); }
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.controls[hidden] { display: none; }
+.controls button { flex: 1; white-space: nowrap; }
+
+.ghost.on {
+  background: var(--warn);
+  color: #1a1204;
+}
+
+.hint {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* What auto-detection settled on. Only meaningful once the camera is open. */
+.detected {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  text-align: center;
+}
+
+.detected:empty,
+body.sender:not(.running) .detected { display: none; }
+
+.error {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 38%, transparent);
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.error[hidden] { display: none; }
+
+/* Landscape: the phone is on its side, so put the panel beside the preview. */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.sender { flex-direction: row; }
+  .frame { min-height: 100%; }
+  .panel {
+    width: 320px;
+    border-top: none;
+    border-left: 1px solid var(--line);
+    overflow-y: auto;
+  }
+  .grid { grid-template-columns: 1fr; }
+}

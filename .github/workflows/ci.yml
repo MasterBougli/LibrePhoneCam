@@ -1,0 +1,53 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ["3.10", "3.12", "3.13"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Signaling hub
+        run: python tests/test_signaling.py
+
+      - name: Port selection
+        run: python tests/test_runtime.py
+
+      # Selects the capture mode from what the camera reports; pure logic, so
+      # Node runs it without a browser.
+      - name: Camera mode selection
+        run: node tests/test_camera.mjs
+
+      # Translation parity and theme variables: a missing key only shows up
+      # once someone presses the language button.
+      - name: Web pages
+        run: node tests/test_web.mjs
+
+      # Builds the real window. Skips itself where there is no display, which
+      # is the normal case on the Linux runners.
+      - name: Desktop window
+        run: python tests/test_gui.py
