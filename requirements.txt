@@ -1,0 +1,4 @@
+aiohttp>=3.10
+cryptography>=42.0
+qrcode>=7.4
+colorama>=0.4.6

@@ -28,6 +28,11 @@ jobs:
         with:
           node-version: "20"
 
+      # Runs before the install so a missing or self-including requirements
+      # file is reported as such, instead of as a pip error.
+      - name: Project layout
+        run: python tests/test_project.py
+
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
