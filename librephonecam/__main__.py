@@ -45,10 +45,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                    help="interface for the TLS listener (default: all)")
     p.add_argument("--ip", default=None,
                    help="override the LAN IP shown in the QR code")
-    p.add_argument("--stun", default=DEFAULT_STUN,
-                   help=f"STUN server for ICE (default: {DEFAULT_STUN})")
-    p.add_argument("--no-stun", action="store_true",
-                   help="LAN-only ICE; no packet ever leaves your network")
+    p.add_argument("--stun", nargs="?", const=DEFAULT_STUN, default=None,
+                   metavar="URL",
+                   help="contact a STUN server for ICE, off by default; bare "
+                        f"--stun uses {DEFAULT_STUN}")
     p.add_argument("--cert-dir", type=Path, default=ROOT / "certs",
                    help="where the self-signed certificate lives")
     p.add_argument("-v", "--verbose", action="store_true", help="debug logging")
@@ -65,7 +65,7 @@ def config_from(args: argparse.Namespace) -> Config:
         http_port=args.http_port,
         host=args.host,
         ip=args.ip,
-        stun=None if args.no_stun else args.stun,
+        stun=args.stun,
         cert_dir=args.cert_dir,
         auto_port=not chose_ports,
     )

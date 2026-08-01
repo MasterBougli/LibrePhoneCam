@@ -32,7 +32,7 @@ if errorlevel 1 (
 )
 
 rem No arguments: open the desktop app. Any argument means the caller wants
-rem the command line (ports, --no-stun, and so on).
+rem the command line (ports, --ip, and so on).
 if "%~1"=="" (
   "%VENV%\Scripts\pythonw.exe" -m librephonecam.gui
   goto :eof

@@ -40,7 +40,10 @@ class Config:
     http_port: int = 8080
     host: str = "0.0.0.0"
     ip: str | None = None
-    stun: str | None = DEFAULT_STUN
+    # No STUN by default. Phone and PC share a network, so ICE finds a route
+    # through host candidates alone, and contacting an outside server would
+    # break the promise that nothing leaves the machine.
+    stun: str | None = None
     cert_dir: Path = field(default_factory=lambda: ROOT / "certs")
     # Ports like 8080 are popular; refusing to start because some updater got
     # there first is a dead end for anyone who cannot edit a command line.

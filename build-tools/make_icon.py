@@ -1,8 +1,11 @@
-"""Generate assets/LibrePhoneCam.ico.
+"""Generate the application icon: LibrePhoneCam.ico and LibrePhoneCam.png.
 
 Pure standard library on purpose: the icon is a build input, and pulling
-Pillow in just to draw two circles would put a compiled dependency in the
+Pillow in just to draw a few shapes would put a compiled dependency in the
 release pipeline for no reason.
+
+The .ico is what Windows uses for the executable, the window and the taskbar.
+The .png is what Tk uses for the window icon everywhere else.
 
 Run with: python build-tools/make_icon.py
 """
@@ -11,10 +14,15 @@ from __future__ import annotations
 
 import math
 import struct
+import zlib
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent / "LibrePhoneCam.ico"
+HERE = Path(__file__).resolve().parent
+ICO_OUT = HERE / "LibrePhoneCam.ico"
+PNG_OUT = HERE / "LibrePhoneCam.png"
+
 SIZES = (16, 24, 32, 48, 64, 128, 256)
+PNG_SIZE = 256
 SUPERSAMPLE = 4  # rendered at 4x then averaged down, for clean edges
 
 ACCENT = (59, 130, 246)  # #3b82f6, the accent colour of the app and web pages
@@ -22,48 +30,63 @@ DARK = (11, 13, 16)  # #0b0d10
 WHITE = (255, 255, 255)
 
 
-def _rounded_square(x: float, y: float, size: float) -> bool:
-    """Signed-distance test for a rounded square centred in `size`.
+def _rounded_rect(x: float, y: float, cx: float, cy: float,
+                  w: float, h: float, r: float) -> bool:
+    """Signed-distance test for a rounded rectangle centred on (cx, cy).
 
     Only the corner quadrant is a circle test; along the straight edges one of
-    the two offsets clamps to zero, which is what keeps the sides square.
+    the two offsets clamps to zero, which is what keeps the sides flat.
     """
-    r = size * 0.22
-    half = size / 2
-    qx = max(abs(x - half) - (half - r), 0.0)
-    qy = max(abs(y - half) - (half - r), 0.0)
+    qx = max(abs(x - cx) - (w / 2 - r), 0.0)
+    qy = max(abs(y - cy) - (h / 2 - r), 0.0)
     return math.hypot(qx, qy) <= r
 
 
 def _render(size: int) -> list[bytes]:
-    """One RGBA row per line, drawn at `size` pixels."""
+    """One RGBA row per line, drawn at `size` pixels.
+
+    A phone body with a lens in it. The lens alone reads as any camera; the
+    body is what makes it a *phone* camera at a glance.
+    """
     big = size * SUPERSAMPLE
     cx = cy = big / 2
 
-    lens_outer = big * 0.29
-    lens_inner = big * 0.205
-    glint_r = big * 0.045
-    glint_x, glint_y = cx + big * 0.085, cy - big * 0.095
+    plate_r = big * 0.22
 
-    # Accumulate at high resolution, then box-filter down to `size`.
+    phone_w, phone_h = big * 0.46, big * 0.70
+    phone_r = big * 0.10
+    # Slightly above centre so the body does not look bottom-heavy inside the
+    # rounded plate.
+    phone_cy = cy - big * 0.005
+
+    lens_outer = big * 0.150
+    lens_inner = big * 0.104
+    glint_r = big * 0.030
+    glint_x, glint_y = cx + big * 0.048, phone_cy - big * 0.052
+
     hi: list[list[tuple[int, int, int, int]]] = []
     for py in range(big):
         row: list[tuple[int, int, int, int]] = []
         for px in range(big):
             x, y = px + 0.5, py + 0.5
-            if not _rounded_square(x, y, big):
+
+            if not _rounded_rect(x, y, cx, cy, big, big, plate_r):
                 row.append((0, 0, 0, 0))
                 continue
 
-            d = math.hypot(x - cx, y - cy)
+            if not _rounded_rect(x, y, cx, phone_cy, phone_w, phone_h, phone_r):
+                row.append((*ACCENT, 255))
+                continue
+
+            d = math.hypot(x - cx, y - phone_cy)
             if math.hypot(x - glint_x, y - glint_y) <= glint_r:
                 row.append((*WHITE, 255))
             elif d <= lens_inner:
                 row.append((*DARK, 255))
             elif d <= lens_outer:
-                row.append((*WHITE, 255))
-            else:
                 row.append((*ACCENT, 255))
+            else:
+                row.append((*WHITE, 255))
         hi.append(row)
 
     rows: list[bytes] = []
@@ -115,9 +138,28 @@ def _dib(size: int, rows: list[bytes]) -> bytes:
     return header + bytes(pixels) + mask
 
 
-def main() -> None:
-    images = [(size, _dib(size, _render(size))) for size in SIZES]
+def _png(size: int, rows: list[bytes]) -> bytes:
+    def chunk(tag: bytes, payload: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(payload))
+            + tag
+            + payload
+            + struct.pack(">I", zlib.crc32(tag + payload) & 0xFFFFFFFF)
+        )
 
+    raw = b"".join(b"\x00" + row for row in rows)  # filter type 0 per scanline
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+        + chunk(b"IDAT", zlib.compress(raw, 9))
+        + chunk(b"IEND", b"")
+    )
+
+
+def main() -> None:
+    rendered = {size: _render(size) for size in sorted({*SIZES, PNG_SIZE})}
+
+    images = [(size, _dib(size, rendered[size])) for size in SIZES]
     header = struct.pack("<HHH", 0, 1, len(images))
     offset = len(header) + 16 * len(images)
 
@@ -128,9 +170,12 @@ def main() -> None:
         entries += struct.pack("<BBBBHHII", dim, dim, 0, 0, 1, 32, len(data), offset)
         offset += len(data)
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_bytes(header + bytes(entries) + b"".join(d for _, d in images))
-    print(f"wrote {OUT} ({OUT.stat().st_size:,} bytes, sizes: {', '.join(map(str, SIZES))})")
+    ICO_OUT.write_bytes(header + bytes(entries) + b"".join(d for _, d in images))
+    PNG_OUT.write_bytes(_png(PNG_SIZE, rendered[PNG_SIZE]))
+
+    print(f"wrote {ICO_OUT.name} ({ICO_OUT.stat().st_size:,} bytes, "
+          f"sizes: {', '.join(map(str, SIZES))})")
+    print(f"wrote {PNG_OUT.name} ({PNG_OUT.stat().st_size:,} bytes, {PNG_SIZE}px)")
 
 
 if __name__ == "__main__":

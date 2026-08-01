@@ -30,6 +30,23 @@ def web_dir() -> Path:
     return bundle_dir() / "web"
 
 
+def icon_path(suffix: str) -> Path | None:
+    """The window icon, or None if it has not been generated yet.
+
+    A frozen build gets it at the bundle root; running from source reads it
+    straight out of build-tools, so a fresh clone still shows the real icon
+    without anyone having to run the build first.
+    """
+    name = f"{APP_NAME}.{suffix}"
+    for candidate in (
+        bundle_dir() / name,
+        Path(__file__).resolve().parent.parent / "build-tools" / name,
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def data_dir() -> Path:
     """Writable location for the generated certificate.
 

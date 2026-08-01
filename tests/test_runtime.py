@@ -81,8 +81,9 @@ def main() -> int:
     cfg = Config()
     check("default ports", (cfg.https_port, cfg.http_port) == (8443, 8080), f"{cfg.https_port}/{cfg.http_port}")
     check("fallback on by default", cfg.auto_port is True)
-    check("stun configured by default", cfg.ice_servers() != [])
-    check("no-stun yields no ice servers", Config(stun=None).ice_servers() == [])
+    # The privacy claim in the README depends on this staying empty.
+    check("no external server by default", cfg.ice_servers() == [], str(cfg.ice_servers()))
+    check("stun is opt-in", Config(stun="stun:example.test:3478").ice_servers() != [])
 
     if failures:
         print(f"\n{len(failures)} failure(s)")

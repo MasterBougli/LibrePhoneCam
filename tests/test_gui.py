@@ -87,6 +87,26 @@ def main() -> int:
         app._rows[0].copy()
         check("copy puts the url on the clipboard", app.root.clipboard_get() == ep.phone_url)
 
+        # --- icon
+        from librephonecam.paths import icon_path
+
+        ico, png = icon_path("ico"), icon_path("png")
+        check("icon files are present", ico is not None and png is not None,
+              f"ico={ico is not None} png={png is not None}")
+        check("window icon was applied", app.icon_applied is True)
+
+        if sys.platform == "win32":
+            # Tk does not round-trip iconbitmap() on Windows, so ask the
+            # window manager itself whether the window really carries an icon.
+            import ctypes
+
+            app.root.update()
+            hwnd = int(app.root.wm_frame(), 16)
+            big = ctypes.windll.user32.SendMessageW(hwnd, 0x007F, 1, 0)   # ICON_BIG
+            small = ctypes.windll.user32.SendMessageW(hwnd, 0x007F, 0, 0)  # ICON_SMALL
+            check("windows reports a window icon", bool(big or small),
+                  f"big={big} small={small}")
+
         # --- language
         for lang in ("en", "fr"):
             app.lang = lang

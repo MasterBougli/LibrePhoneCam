@@ -38,7 +38,7 @@ def _build(hosts: list[str]) -> tuple[bytes, bytes]:
         except ValueError:
             alt_names.append(x509.DNSName(host))
 
-    subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "iphone-webcam")])
+    subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "LibrePhoneCam")])
     now = dt.datetime.now(dt.timezone.utc)
 
     cert = (

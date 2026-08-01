@@ -13,8 +13,15 @@ a = Analysis(  # noqa: F821
     [str(HERE / "entry.py")],
     pathex=[str(ROOT)],
     binaries=[],
-    # The web pages are read at runtime, so they must travel with the binary.
-    datas=[(str(ROOT / "web"), "web")],
+    datas=[
+        # The web pages are read at runtime, so they must travel with the
+        # binary.
+        (str(ROOT / "web"), "web"),
+        # The icon is needed twice: once below as the executable's own icon,
+        # and again at runtime for the window and the taskbar.
+        (str(HERE / "LibrePhoneCam.ico"), "."),
+        (str(HERE / "LibrePhoneCam.png"), "."),
+    ],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],

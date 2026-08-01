@@ -1,9 +1,15 @@
 # LibrePhoneCam
 
-Turn your phone into a webcam for Streamlabs, over your own wifi.
-No app to install on the phone, no account, no cloud, free.
+Turn your phone into a webcam for Streamlabs, OBS or anything with a browser source over your own wifi.
+No app to install on the phone, no account, no cloud, free and opensource.
 
 *[Version française](README.fr.md)*
+
+## Why
+
+Built for small streamers who cannot drop a few hundred euros on a camera, or
+pay a monthly fee for an app that does the same job. You already own a good
+camera. It is in your pocket.
 
 ## Install
 
@@ -44,11 +50,18 @@ and dark theme**.
                   (introduces them, then steps aside)
 ```
 
-The video goes straight from your phone to Streamlabs. It never passes through
-the app, is never recorded, and never leaves your wifi.
-
 Quality is automatic: the page asks your camera what it can do and picks the
 best setting it can carry, up to 1080p60.
+
+## Everything stays on your machine
+
+The program connects to **no external server at all**. No account, no sign-up,
+no telemetry, no cloud relay, nothing phoning home. The only thing running is a
+small web server on your own PC.
+
+The video goes straight from your phone to Streamlabs across your wifi. It never
+passes through the app, is never recorded, and never reaches the internet. Unplug
+your router from the wall and it still works.
 
 ## The certificate warning
 

@@ -5,6 +5,12 @@ Aucune application à installer sur le téléphone, pas de compte, pas de cloud,
 
 *[English version](README.md)*
 
+## Pourquoi
+
+Fait pour les petits streameurs qui ne peuvent pas mettre plusieurs centaines
+d'euros dans une caméra, ni payer un abonnement mensuel pour une application qui
+fait la même chose. Vous avez déjà une bonne caméra : elle est dans votre poche.
+
 ## Installation
 
 **[Téléchargez LibrePhoneCam.exe](../../releases/latest)** et lancer le programme.
@@ -46,11 +52,19 @@ dispose d'un **thème clair et sombre**.
               (les présente, puis s'efface)
 ```
 
-La vidéo va directement du téléphone à Streamlabs. Elle ne passe jamais par
-l'application, n'est jamais enregistrée, et ne quitte jamais votre wifi.
-
 La qualité est automatique : la page demande à votre caméra ce qu'elle sait
 faire et choisit le meilleur réglage transportable, jusqu'à 1080p60.
+
+## Tout reste sur votre machine
+
+Le programme ne se connecte à **aucun serveur externe**. Pas de compte, pas
+d'inscription, pas de télémétrie, pas de relais cloud, rien qui appelle
+l'extérieur. La seule chose qui tourne est un petit serveur web sur votre propre
+PC.
+
+La vidéo va directement du téléphone à Streamlabs via votre wifi. Elle ne passe
+jamais par l'application, n'est jamais enregistrée, et n'atteint jamais
+internet. Débranchez votre box : ça marche encore.
 
 ## L'avertissement de certificat
 

@@ -18,7 +18,7 @@ if ! "$PY" -c "import aiohttp, cryptography, qrcode, colorama" >/dev/null 2>&1; 
 fi
 
 # No arguments: open the desktop app. Any argument means the caller wants the
-# command line (ports, --no-stun, and so on).
+# command line (ports, --ip, and so on).
 if [ $# -eq 0 ]; then
   exec "$PY" -m librephonecam.gui
 fi

@@ -16,6 +16,7 @@ import webbrowser
 from tkinter import messagebox
 
 from . import __app_name__, __version__, i18n, prefs, theme
+from .paths import icon_path
 from .qr import matrix as qr_matrix
 from .runtime import Config, Endpoints, NoNetwork, PortInUse, ServerThread
 from .signaling import Hub
@@ -39,6 +40,25 @@ def enable_dpi_awareness() -> None:
             ctypes.windll.user32.SetProcessDPIAware()
         except Exception:
             pass
+
+
+def claim_taskbar_identity() -> None:
+    """Give Windows an application id of our own.
+
+    Without it the taskbar groups the window under whichever interpreter is
+    hosting it and shows that program's icon instead of ours. Must run before
+    the first window exists.
+    """
+    if sys.platform != "win32":
+        return
+    try:
+        import ctypes
+
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+            f"{__app_name__}.{__app_name__}"
+        )
+    except Exception:
+        pass
 
 
 class AddressRow(tk.Frame):
@@ -141,11 +161,40 @@ class App:
         self.root.title(__app_name__)
         self.root.resizable(False, False)
         self.root.protocol("WM_DELETE_WINDOW", self.close)
+        self.icon_applied = self._apply_icon()
 
         self._build()
         self.apply_theme()
         self.apply_lang()
         self.root.after(50, self.boot)
+
+    def _apply_icon(self) -> bool:
+        """Put the logo on the window, the taskbar and every dialog.
+
+        `default=` makes it apply to message boxes too, which would otherwise
+        keep the bare Tk feather.
+        """
+        ico = icon_path("ico")
+        if ico is not None and sys.platform == "win32":
+            try:
+                # `default=` covers dialogs, which would otherwise keep the
+                # bare Tk feather; the plain call sets this window's own icon.
+                self.root.iconbitmap(default=str(ico))
+                self.root.iconbitmap(str(ico))
+                return True
+            except tk.TclError:
+                pass
+
+        png = icon_path("png")
+        if png is not None:
+            try:
+                # Tk drops the image if nothing holds a reference to it.
+                self._icon_image = tk.PhotoImage(file=str(png))
+                self.root.iconphoto(True, self._icon_image)
+                return True
+            except tk.TclError:
+                pass
+        return False
 
     # -- palette plumbing -------------------------------------------------
 
@@ -445,6 +494,7 @@ class App:
 
 def main() -> None:
     enable_dpi_awareness()
+    claim_taskbar_identity()
     App(Config()).run()
 
 
