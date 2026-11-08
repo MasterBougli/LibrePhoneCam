@@ -112,3 +112,5 @@ Made by [SER-PICO](https://github.com/SER-PICO).
 ## License
 
 MIT
+
+**Soutenir Bougli** · [Faire un don PayPal via Streamlabs](https://streamlabs.com/bouglitv) · [Soutenir sur Patreon](https://www.patreon.com/cw/Bougli)
